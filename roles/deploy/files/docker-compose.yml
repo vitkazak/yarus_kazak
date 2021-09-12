@@ -1,0 +1,23 @@
+version: "3"
+services:
+    grafana:
+        container_name: grafana
+        image: grafana/grafana:latest
+        ports:
+          - 3000:3000
+        networks:
+          - example
+
+
+
+    nginx:
+        container_name: nginx
+        image: nginx:latest
+        ports:
+          - 5555:80        
+        networks:
+          - example
+
+networks:
+  example:
+    driver: bridge
