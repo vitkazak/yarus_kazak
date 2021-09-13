@@ -68,32 +68,24 @@
 - name: Copy docker-compose
   template: src=docker-compose.yml dest="{{ destin_file }}" mode=0555
 
-#- name: Copy Dockerfile
-#  template: src=Dockerfile dest="{{ destin_file }}" mode=0555
 
-#- name: Copy nginx.conf
-# template: src=nginx.conf dest="{{ destin_file }}" mode=0555
-
-
-
-- name: list the files in the folder
-  command: ls /dir/
-  register: dir_out
-
-- name: do the action
-  fetch: src=/dir/{{item}} dest="{{ destin_file }}" flat=yes
-  with_items: ('{{dir_out.stdout_lines}}')
-
-- name: Copy conf.d
-  template: src=./conf.d dest="{{ destin_file }}" mode=0555
-
-- name: Build Dockerfile
-  become: True
-  shell:
-    cmd: "docker build -t my_ngnix"
-    chdir: /etc/dev/mydockerbuild
+- name: Copy nginx.conf 
+  copy:
+    src: nginx.conf
+    dest: "{{ destin_file }}"
 
 
+- name: copy Dockerfile
+  copy:
+        src: ./mydockerbuild
+        dest: "{{ destin_file }}"
+        owner: root
+        group: root
+        mode: '0644'
+
+
+- name: build the image
+  command: docker build -t getting-started /etc/dev/mydockerbuild
 
 - name: Run container
   become: True
